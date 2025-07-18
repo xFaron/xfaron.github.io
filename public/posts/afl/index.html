@@ -1,0 +1,1262 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="light"
+  data-auto-appearance="false"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="en">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  <title>Unveiling AFL (American Fuzzy Lop): My reading notes &middot; Faron</title>
+    <meta name="title" content="Unveiling AFL (American Fuzzy Lop): My reading notes &middot; Faron">
+
+  
+  <meta name="description" content="My reading notes on AFL">
+  <meta name="keywords" content="fuzzing,">
+  
+  
+  <link rel="canonical" href="http://localhost:1313/posts/afl/">
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.a7033cb3fb22c4cacc15b4e2df838a5b88e6df260c30c1723e21c92dd045bf0ad90c82b9de264a5515a9fc62a12bcd7a459109ba1452fcee8ec47d284eeb9c34.css"
+    integrity="sha512-pwM8s/sixMrMFbTi34OKW4jm3yYMMMFyPiHJLdBFvwrZDIK53iZKVRWp/GKhK816RZEJuhRS/O6OxH0oTuucNA==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.516a16745bea5a9bd011138d254cc0fd3973cd55ce6e15f3dec763e7c7c2c7448f8fe7b54cca811cb821b0c7e12cd161caace1dd794ac3d34d40937cbcc9ee12.js"
+    integrity="sha512-UWoWdFvqWpvQERONJUzA/TlzzVXObhXz3sdj58fCx0SPj&#43;e1TMqBHLghsMfhLNFhyqzh3XlKw9NNQJN8vMnuEg=="></script>
+  
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.a187118b41a60744310065c567365de85730c8495301d0ebae41810cc6f7a47432b1de7d4f3b11338959f1ac50c266be6b4b73acf6bf770016eb59b602cc1aa0.js"
+      integrity="sha512-oYcRi0GmB0QxAGXFZzZd6FcwyElTAdDrrkGBDMb3pHQysd59TzsRM4lZ8axQwma&#43;a0tzrPa/dwAW61m2AswaoA=="
+      data-copy="Copy"
+      data-copied="Copied"></script>
+  
+  
+    
+    <script src="/lib/zoom/zoom.min.umd.a527109b68c082a70f3697716dd72a9d5aa8b545cf800cecbbc7399f2ca6f6e0ce3e431f2062b48bbfa47c9ea42822714060bef309be073f49b9c0e30d318d7b.js" integrity="sha512-pScQm2jAgqcPNpdxbdcqnVqotUXPgAzsu8c5nyym9uDOPkMfIGK0i7&#43;kfJ6kKCJxQGC&#43;8wm&#43;Bz9JucDjDTGNew=="></script>
+  
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:url" content="http://localhost:1313/posts/afl/">
+  <meta property="og:site_name" content="Faron">
+  <meta property="og:title" content="Unveiling AFL (American Fuzzy Lop): My reading notes">
+  <meta property="og:description" content="My reading notes on AFL">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-07-07T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-07-07T00:00:00+00:00">
+    <meta property="article:tag" content="Fuzzing">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Unveiling AFL (American Fuzzy Lop): My reading notes">
+  <meta name="twitter:description" content="My reading notes on AFL">
+
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Posts",
+    "name": "Unveiling AFL (American Fuzzy Lop): My reading notes",
+    "headline": "Unveiling AFL (American Fuzzy Lop): My reading notes",
+    "description": "My reading notes on AFL",
+    
+    "inLanguage": "en",
+    "url" : "http:\/\/localhost:1313\/posts\/afl\/",
+    "author" : {
+      "@type": "Person",
+      "name": "Harikrishna S"
+    },
+    "copyrightYear": "2025",
+    "dateCreated": "2025-07-07T00:00:00\u002b00:00",
+    "datePublished": "2025-07-07T00:00:00\u002b00:00",
+    
+    "dateModified": "2025-07-07T00:00:00\u002b00:00",
+    
+    "keywords": ["fuzzing"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "2228"
+  }]
+  </script>
+
+
+
+  
+  
+    <meta name="author" content="Harikrishna S">
+  
+  
+
+  
+  
+
+<script src="/lib/jquery/jquery.slim.min.b0dca576e87d7eaa5850ae4e61759c065786cdb6489d68fcc82240539eebd5da522bdb4fda085ffd245808c8fe2acb2516408eb774ef26b5f6015fc6737c0ea8.js" integrity="sha512-sNylduh9fqpYUK5OYXWcBleGzbZInWj8yCJAU57r1dpSK9tP2ghf/SRYCMj&#43;KsslFkCOt3TvJrX2AV/Gc3wOqA=="></script>
+
+
+
+
+
+
+
+
+
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/lib/katex/katex.min.7e7e35e3ef02b7b437449a44ca3fac62ec1ed39cb8312b680a00fe8ac60badc95b063b694636b8440856f7f5e8c2cc9e6b0efb581179b2656c7e1e97558c7096.css"
+    integrity="sha512-fn414&#43;8Ct7Q3RJpEyj&#43;sYuwe05y4MStoCgD&#43;isYLrclbBjtpRja4RAhW9/Xowsyeaw77WBF5smVsfh6XVYxwlg==">
+  
+  
+  
+  <script
+    defer
+    type="text/javascript"
+    src="/js/katex.bundle.735b6f1542c0acf03d492dcdf14710c2e277474a64ae8ce49ef56563e17d142f9d3f4466e82cf12679968f50985628e08948ec341fba2df746545d0fd337d81d.js"
+    integrity="sha512-c1tvFULArPA9SS3N8UcQwuJ3R0pkrozknvVlY&#43;F9FC&#43;dP0Rm6CzxJnmWj1CYVijgiUjsNB&#43;6LfdGVF0P0zfYHQ=="
+    id="katex-render"></script>
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+<body
+    class="flex flex-col h-screen px-6 m-auto text-lg leading-7 max-w-7xl bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32 scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content"
+        ><span class="font-bold text-primary-600 ltr:pr-2 rtl:pl-2 dark:text-primary-400">&darr;</span>Skip to main content</a
+      >
+    </div>
+    
+    
+      <div class="min-h-[148px]"></div>
+<div class="fixed inset-x-0 pl-[24px] pr-[24px] z-100">
+  <div
+    id="menu-blur"
+    class="absolute opacity-0 inset-x-0 top-0 h-full single_hero_background nozoom backdrop-blur-2xl shadow-2xl"></div>
+  <div class="relative max-w-[64rem] ml-auto mr-auto">
+    
+
+
+
+
+
+
+
+
+
+
+
+<div
+  class="main-menu flex items-center justify-between px-4 py-6 sm:px-6 md:justify-start gap-x-3 pt-[2px] pr-0 pb-[3px] pl-0">
+  
+  
+
+  <div class="flex flex-1 items-center justify-between">
+    <nav class="flex space-x-3">
+      
+        <a href="/" class="text-base font-medium text-gray-500 hover:text-gray-900">
+          Faron
+        </a>
+      
+    </nav>
+    
+  <nav class="hidden md:flex items-center gap-x-5 md:ml-12 h-12">
+    
+      
+        
+  <a
+  href="/posts/"
+  
+  class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="Posts">
+    Posts
+  </p>
+</a>
+
+
+
+      
+        
+  <a
+  href="/thoughts/"
+  
+  class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="Thoughts">
+    Thoughts
+  </p>
+</a>
+
+
+
+      
+        
+  <a
+  href="/about/"
+  
+  class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="About Me">
+    About
+  </p>
+</a>
+
+
+
+      
+        
+  <a
+  href=""
+  
+  class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+  
+  <p class="text-base font-medium" title="">
+    
+  </p>
+</a>
+
+
+
+      
+    
+
+    
+
+
+    
+      <button
+        id="search-button"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        
+
+  <span class="relative block icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+
+  </span>
+
+
+      </button>
+    
+
+    
+      <div class=" flex items-center">
+        <button
+          id="appearance-switcher"
+          aria-label="Dark mode switcher"
+          type="button"
+          class="text-base hover:text-primary-600 dark:hover:text-primary-400">
+          <div class="flex items-center justify-center dark:hidden">
+            
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+
+  </span>
+
+
+          </div>
+          <div class="items-center justify-center hidden dark:flex">
+            
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+
+  </span>
+
+
+          </div>
+        </button>
+      </div>
+    
+  </nav>
+
+    
+  <div class="flex md:hidden items-center gap-x-5 md:ml-12 h-12">
+    <span></span>
+
+    
+
+    
+      <button
+        id="search-button-mobile"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        
+
+  <span class="relative block icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+
+  </span>
+
+
+      </button>
+    
+
+    
+      <button
+        id="appearance-switcher-mobile"
+        aria-label="Dark mode switcher"
+        type="button"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400 ltr:mr-1 rtl:ml-1">
+        <div class="flex items-center justify-center dark:hidden">
+          
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+
+  </span>
+
+
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+
+  </span>
+
+
+        </div>
+      </button>
+    
+  </div>
+
+  </div>
+  
+  <div class="-my-2 md:hidden">
+    <div id="menu-button" class="block">
+      
+        <div class="cursor-pointer hover:text-primary-600 dark:hover:text-primary-400">
+          
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"/></svg>
+
+  </span>
+
+
+        </div>
+        <div
+          id="menu-wrapper"
+          class="fixed inset-0 z-30 invisible w-screen h-screen m-0 overflow-auto transition-opacity opacity-0 cursor-default bg-neutral-100/50 backdrop-blur-sm dark:bg-neutral-900/50 pt-[5px]">
+          <ul
+            class="flex space-y-2 mt-3 flex-col items-end w-full px-6 py-6 mx-auto overflow-visible list-none ltr:text-right rtl:text-left max-w-7xl">
+            <li id="menu-close-button">
+              <span
+                class="cursor-pointer inline-block align-text-bottom hover:text-primary-600 dark:hover:text-primary-400">
+                
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+
+  </span>
+
+
+              </span>
+            </li>
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/posts/"
+    
+    class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="Posts">
+      Posts
+    </p>
+  </a>
+</li>
+
+
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/thoughts/"
+    
+    class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="Thoughts">
+      Thoughts
+    </p>
+  </a>
+</li>
+
+
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/about/"
+    
+    class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="About Me">
+      About
+    </p>
+  </a>
+</li>
+
+
+
+            
+              
+  <li class="mt-1">
+  <a
+    href=""
+    
+    class="flex items-center text-gray-500 hover:text-primary-600 dark:hover:text-primary-400">
+    
+    <p class="text-bg font-bg" title="">
+      
+    </p>
+  </a>
+</li>
+
+
+
+            
+
+          </ul>
+          
+        </div>
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+</div>
+
+
+<script
+  type="text/javascript"
+  src="/js/background-blur.min.78ad5090e7c0c2533bac9dd23bdb1f723f834e5c3626627bd31017cc139ce0651b529877862129cee49e380ab2fdcd8baef28ae3e086bc54957fdaa7758775b2.js"
+  integrity="sha512-eK1QkOfAwlM7rJ3SO9sfcj&#43;DTlw2JmJ70xAXzBOc4GUbUph3hiEpzuSeOAqy/c2LrvKK4&#43;CGvFSVf9qndYd1sg=="
+  data-target-id="menu-blur"></script>
+
+    
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+
+
+  <article>
+    
+
+
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Unveiling AFL (American Fuzzy Lop): My reading notes
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+
+  
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2025-07-07T00:00:00&#43;00:00">7 July 2025</time><span class="px-2 text-primary-500">&middot;</span><span>2228 words</span><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">11 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+
+  
+  
+
+
+
+      </div>
+
+      
+      
+      
+      
+      
+
+      
+
+      
+
+        
+          
+          
+<div class="flex author">
+  
+  <div class="place-self-center">
+    
+      <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
+        Author
+      </div>
+      <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+        Harikrishna S
+      </div>
+    
+    
+      <div class="text-sm text-neutral-700 dark:text-neutral-400">A guy who likes to learn</div>
+    
+    <div class="text-2xl sm:text-lg">
+</div>
+  </div>
+</div>
+
+        
+
+        
+
+        
+          <div class="mb-5"></div>
+        
+
+      
+
+    </header>
+
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+
+
+        <div class="article-content max-w-prose mb-20">
+          <p><div class="lead text-neutral-500 dark:text-neutral-400 !mb-9 text-xl">
+  Note : The content below are my reading notes on AFL. They are accurate to the best of my beliefs. But, if you find any errors, let me know : )
+</div>
+
+
+</p>
+<p>American Fuzzy Lop (AFL) is a groundbreaking fuzzing tool that revolutionized coverage-guided greybox fuzzing. Its design philosophy emphasizes performance, simplicity, and deep system understanding. The below notes explores some of the most critical mechanics and design principles behind AFL.</p>
+
+<h2 class="relative group">Coverage measurements 
+    <div id="coverage-measurements" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#coverage-measurements" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>There are two forms of coverage measurements</p>
+<ul>
+<li>Coarse Hit count registration</li>
+<li>Storing Tuples of branches explored</li>
+</ul>
+<p>Each branch of the program is associated with a unique id. Now, based on this, we can create tuples of the form (branch1_id, branch2_id). Such ordered sequence of tuples, if follow an execution trace, can be considered to be a path.</p>
+<p>Usually, some lightweight instrumentation is injected into the code at compile time which looks something like this</p>
+<pre tabindex="0"><code>cur_location = &lt;COMPILE_TIME_RANDOM&gt;;
+shared_mem[cur_location ^ prev_location]++; 
+prev_location = cur_location &gt;&gt; 1;
+</code></pre><p>The <code>shared_mem</code> is a 64KB bitmap in the case of AFL, and it stores all the unique tuple counts explored till then.</p>
+<p>Basically, <code>cur_location</code> is the identifier for a given branch, <code>cur_location ^ prev_location</code> can be considered a <sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>semi unique id for the tuple at that instant.</p>
+<p>Suppose the program execution trace is as follows </p>
+$$A\rightarrow B\rightarrow C\rightarrow D\rightarrow E$$<p>
+Then, the <code>shared_mem</code> might store something which intuitively looks like what is given below</p>
+<pre tabindex="0"><code>shared_mem = {
+	(A,B) : 1
+	(B,C) : 1
+	(C,D) : 1
+	(D,E) : 1
+}
+</code></pre><blockquote>
+<p>[!NOTE] For intuitiveness only!
+The above map is just an intuitive explanation. In the actual scenario, <code>cur_location ^ prev_location</code>  is the key, which comes out to be some index in the byte-array, and the value is generally the hitcounts</p></blockquote>
+<p>Another example, say </p>
+$$A\rightarrow B\rightarrow C\rightarrow A\rightarrow B$$<p>
+comes out with a <code>shared_mem</code> as shown below</p>
+<pre tabindex="0"><code>shared_mem = {
+	(A,B) : 2
+	(B,C) : 1
+	(C,A) : 1
+}
+</code></pre><p>There is a specific importance to <code>prev_location = cur_location &gt;&gt; 1</code>. This help the program differentiate between tuples like $(A,B)$ and $(B,A)$. It also help differentiate $(A,A)$ and $(B,B)$ ( When two same numbers are XOR&rsquo;ed, they return 0 )</p>
+<blockquote>
+<p>[!NOTE] From Paper : Coverage-based Greybox Fuzzing as Markov Chain
+The variable cur_location identifies the current basic block. Its random identifier is generated at compile time. Variable shared_mem[] is a 64 kB shared memory region. Every byte that is set in the array marks a hit for a particular tuple (A, B) in the instrumented code where basic block B is executed after basic block A. The shift operation in Line 3 preserves the directionality [(A, B) versus (B, A)]. A hash over shared_mem[] is used as the path identifier.</p></blockquote>
+
+<h2 class="relative group">Detecting new behaviour 
+    <div id="detecting-new-behaviour" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#detecting-new-behaviour" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>The fuzzer maintains a global map of tuples seen in previous executions; this data can be rapidly compared with individual traces and updated in just a couple of dword- or qword-wide instructions and a simple loop.</p>
+<p>Now, there are two ways to flag a seed to produce <sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>interesting output</p>
+
+<h3 class="relative group">Based on Coarse Hit counts 
+    <div id="based-on-coarse-hit-counts" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#based-on-coarse-hit-counts" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>Basically, this means that, if the hit count number for a particular tuple for a particular seed moves the hit count into a new bucket, then it regarded as interesting.</p>
+<p>AFL uses the following hit count buckets given below </p>
+$$1,2,3,4-7,8-15,16-31,32-127,128+$$<p>
+This buckets are obviously chosen for their binary significance. ( Faster operations to check if a number is in these buckets ). Another significance is that, most of time, empirically, a jump from 1 to 2 hit counts can be considered to be significant, from say jump from 47 to 48 hit counts. This also helps avoid the path explosion problem.</p>
+<p>Now, to avoid confusion, look at the examples from the previous section. For the tuple $(A,B)$, the number of hit counts falls into a new bucket which has not been touched until then. Due to this factor, the second seed is considered interesting</p>
+
+<h3 class="relative group">Based on new tuples 
+    <div id="based-on-new-tuples" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#based-on-new-tuples" aria-label="Anchor">#</a>
+    </span>        
+    
+</h3>
+<p>This is quite literally what the title says. If the program execution covers new branches, or an old branch in some new order ($A\rightarrow B$ might have become $B\rightarrow A$) , then that seed is also considered interesting.</p>
+
+<h2 class="relative group">Evolution of seeds 
+    <div id="evolution-of-seeds" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#evolution-of-seeds" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>All the seeds are stored in a queue. When a new interesting seed is found, it is added to the queue to be processed.</p>
+<blockquote>
+<p>[!NOTE] Power schedule
+There seems to be no concept of power schedules at this point in the making of AFL</p></blockquote>
+<p>Mutation strategies are applied. According to the author, mutation strategies lead to better results compared to genetic algorithms. Intuitively, it looks like random mutations evenly explores the search space, finding more interesting executions, rather than a genetic one, which might just go exploring a certain section of the code.</p>
+
+<h2 class="relative group">Aggressive timeouts 
+    <div id="aggressive-timeouts" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#aggressive-timeouts" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>This is also a feature of AFL such that if an input takes longer than some specified limit (in paper, said 5 times the initial run time for the first seed modulo 20 ms), then, that input is no longer processed. This is to keep the fuzzer moving and to be not boggled by slow inputs. The author of AFL also hopes that the fuzzer finds some other input which can uncover the same path that a slow input might have uncovered.</p>
+
+<h2 class="relative group">Reduction of seeds 
+    <div id="reduction-of-seeds" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#reduction-of-seeds" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>This favoured list of seeds after a certain point ( when? ) is reduced into a smaller corpus of seeds that has the same code coverage without all the seeds. It reduces redundancy. Usually, this corpus is seen to be 5 to 10 times smaller</p>
+<blockquote>
+<p>[!NOTE] AFL Authors notes
+To optimize the fuzzing effort, AFL periodically re-evaluates the queue using a fast algorithm that selects a smaller subset of test cases that still cover every tuple seen so far, and whose characteristics make them particularly favorable to the tool</p>
+<p>The algorithm works by assigning every queue entry a score proportional to its execution latency and file size; and then selecting lowest-scoring candidates for each tuple.</p>
+<p>The tuples are then processed sequentially using a simple workflow:</p>
+<ol>
+<li>Find next tuple not yet in the temporary working set</li>
+<li>Locate the winning queue entry for this tuple</li>
+<li>Register <em>all</em> tuples present in that entry&rsquo;s trace in the working set</li>
+<li>Go to #1 if there are any missing tuples in the set.</li>
+</ol>
+<p>The generated corpus of &ldquo;favored&rdquo; entries is usually 5-10x smaller than the starting data set. Non-favored entries are not discarded, but they are skipped with varying probabilities when encountered in the queue:</p>
+<ul>
+<li>If there are new, yet-to-be-fuzzed favorites present in the queue, 99% of non-favored entries will be skipped to get to the favored ones.</li>
+<li>If there are no new favorites:
+<ul>
+<li>If the current non-favored entry was fuzzed before, it will be skipped 95% of the time.</li>
+<li>If it hasn&rsquo;t gone through any fuzzing rounds yet, the odds of skipping drop down to 75%.</li>
+</ul>
+</li>
+</ul>
+<p>Based on empirical testing, this provides a reasonable balance between queue cycling speed and test case diversity.</p></blockquote>
+<p>So, basically, what I got is, there is a global hashmap that stores all the tuples to their hit count buckets</p>
+<p>Each new reduction process, the whole queue to inputs is evaluated. They are assigned a score using the following formula </p>
+$$Score = k\times Time\times InputSize$$<p>Lower score implies higher preference here. Based on these score, the keys of the hash map are iterated, and for each tuple, it goes through the corpus in ascending order to find the best seed for that tuple.</p>
+<p>All these tuple to seed pairs are stores, and then the algorithm is executed</p>
+<p>I believe from this, I understand that there might be something like a favoured metric in each seed. Also, a metric that states how many times it has been executed ( although not entirely necessary now that I think about it ). Based on these info, their energy may have been reevaluated by a power schedule</p>
+<p>So, in summary, the power schedule assignEnergy function is run, which follows the above steps.</p>
+
+<h2 class="relative group">Reductions of size of input files / seeds 
+    <div id="reductions-of-size-of-input-files--seeds" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#reductions-of-size-of-input-files--seeds" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>There are specific mechanisms in place that reduce the file size of these input seeds, while trying to preserve all the data associated with these seeds ( bugs, coverage etc ). Improves data management, and explosion of memory.</p>
+<p>The actual minimization algorithm in <code>afl-tmin</code>:</p>
+<ol>
+<li>
+<p>Attempt to zero large blocks of data with large stepovers. Empirically, this is shown to reduce the number of execs by preempting finer-grained efforts later on.</p>
+</li>
+<li>
+<p>Perform a block deletion pass with decreasing block sizes and stepovers,binary-search-style.</p>
+</li>
+<li>
+<p>Perform alphabet normalization by counting unique characters and trying to bulk-replace each with a zero value.</p>
+</li>
+<li>
+<p>As a last result, perform byte-by-byte normalization on non-zero bytes.</p>
+</li>
+</ol>
+
+<h2 class="relative group">Mutation strategy 
+    <div id="mutation-strategy" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#mutation-strategy" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>AFL starts by mutating its corpus of seeds in a <em>deterministic</em> way. According to the authors notes, they use 3 mutations in this stage</p>
+<ol>
+<li>Sequential bit flips ( varying length and stepovers )</li>
+<li>Sequential addition and subtraction of small integers</li>
+<li>Sequential insertion of known interesting integers (0, 1, INT_MAX etc)</li>
+</ol>
+<p>After this stage, AFL moves into its <em>undeterministic</em> stage, where it follows the following mutations</p>
+<ol>
+<li>Stacked bit flips</li>
+<li>Insertions</li>
+<li>Deletions</li>
+<li>Arithmetic&rsquo;s</li>
+<li>Splicing</li>
+</ol>
+<p>Chiefly due to performance, simplicity and reliability concerns, AFL does not try to reason program states with mutations</p>
+<p>But, there is one exception to the above case. When in the stage of deterministic fuzzing, if the test case does not yield a new checksum for its path, then it directly moves to random mutations. This has been seen to improve the performance of the fuzzer.</p>
+<p><sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>Effector maps also seems to be implemented, although, I am not sure. By external research, effector maps direct mutation to bytes that matter. Suppose for an input, only the first 100 bytes matter out of the total 1024, then mutating 101 to 1024 is a waste. To avoid this, effector maps is used.</p>
+
+<h2 class="relative group">Dictionaries 
+    <div id="dictionaries" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#dictionaries" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>In essence, when basic, typically easily-obtained syntax tokens are combined together in a purely random manner, the instrumentation and the evolutionary design of the queue together provide a feedback mechanism to differentiate between meaningless mutations and ones that trigger new behaviors in the instrumented code - and to incrementally build more complex syntax on top of this discovery.</p>
+<p>The dictionaries have been shown to enable the fuzzer to rapidly reconstruct the grammar of highly verbose and complex languages such as JavaScript, SQL, or XML; several examples of generated SQL statements are given in the blog post mentioned above.</p>
+<p>Interestingly, the AFL instrumentation also allows the fuzzer to automatically isolate syntax tokens already present in an input file. It can do so by looking for run of bytes that, when flipped, produce a consistent change to the program&rsquo;s execution path; this is suggestive of an underlying atomic comparison to a predefined value baked into the code. The fuzzer relies on this signal to build compact &ldquo;auto dictionaries&rdquo; that are then used in conjunction with other fuzzing strategies.</p>
+
+<h2 class="relative group">Unique crash registration 
+    <div id="unique-crash-registration" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#unique-crash-registration" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>The solution implemented in afl-fuzz considers a crash unique if any of two conditions are met:</p>
+<ul>
+<li>
+<p>The crash trace includes a tuple not seen in any of the previous crashes,</p>
+</li>
+<li>
+<p>The crash trace is missing a tuple that was always present in earlier
+faults.</p>
+</li>
+</ul>
+<p>The approach is vulnerable to some path count inflation early on, but exhibits a very strong self-limiting effect, similar to the execution path analysis logic that is the cornerstone of afl-fuzz.</p>
+
+<h2 class="relative group">Fork server 
+    <div id="fork-server" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100">
+        <a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline" href="#fork-server" aria-label="Anchor">#</a>
+    </span>        
+    
+</h2>
+<p>Basically, all the initialisation is done for the program ( linking, importing libraries etc. ), and then the program is stalled at the input phase. Then, this process is copied. This reduces a lot of repeated overhead of compilation procedures.</p>
+<hr>
+<p>So, thats to conclude some features of AFL. I wrote some more notes on AFL, but, I think it would be wiser to read it from the actual paper itself, because, that explains AFL really well.</p>
+<blockquote>
+<p>Coverage-based Greybox Fuzzing as Markov Chain : <a
+  href="https://mboehme.github.io/paper/TSE18.pdf#page=2.98"
+    target="_blank"
+  >https://mboehme.github.io/paper/TSE18.pdf#page=2.98</a></p></blockquote>
+<p>The above paper talks about improving AFL with power schedules, which are a whole another topic, which I won&rsquo;t be discussing here, since, the whole matter of Fuzzing has been discussed in detail in the &ldquo;Fuzzing Book<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>&rdquo;. But, back to the point, under Section 2.1, they have discussed beautifully about AFL. Go check that out</p>
+<p>PS : There are issues with some math typesetting. Will fix at the earliest!</p>
+<hr>
+<p>AFL’s strength lies in its pragmatic and efficient design choices. Rather than complex symbolic reasoning, it embraces lightweight, empirically validated heuristics that have been shown to work exceptionally well in practice. Kinda cool how very simple and naive thinking to testing is among the best work seen in this feild.</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>These id&rsquo;s are not unique to be precise for large programs in general. These id&rsquo;s depend on the compile time random number. At the same time, due to the size of the bitmap being 64KB, a total of $64\times1024$ unique tuples can be stored. So, usually, for huge programs, tuples overlap. But, this is still preferred over creating unique id&rsquo;s for each tuple due to the marginal speed gains in using a 64KB mem ( which conveniently fits into an L2 cache )&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Although not clear from <a
+  href="https://github.com/google/AFL/blob/master/docs/technical_details.txt"
+    target="_blank"
+  >https://github.com/google/AFL/blob/master/docs/technical_details.txt</a> due to his example, I am assuming that both new hit counts and new tuples make a seed intersting&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>Refer to <a
+  href="https://github.com/google/AFL/blob/master/docs/technical_details.txt"
+    target="_blank"
+  >https://github.com/google/AFL/blob/master/docs/technical_details.txt</a> for more details, under section 6, last paragraph.&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>By Andreas Zeller, Rahul Gopinath, Marcel Böhme, Gordon Fraser, and Christian Holler. Refer <a
+  href="https://www.fuzzingbook.org/"
+    target="_blank"
+  >https://www.fuzzingbook.org/</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+          
+          
+          
+        </div>
+
+        
+
+        
+
+        
+
+        
+
+      </div>
+
+      
+      
+        
+        
+          
+          
+        
+        
+        
+        <script
+          type="text/javascript"
+          src="/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js"
+          integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA=="
+          data-oid="views_posts/afl/index.md"
+          data-oid-likes="likes_posts/afl/index.md"></script>
+      
+
+    </section>
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+  
+
+
+      
+    </footer>
+  </article>
+
+        <div id="top-scroller" class="pointer-events-none absolute top-[110vh] bottom-0 w-12 ltr:right-0 rtl:left-0">
+  <a
+    href="#the-top"
+    class="pointer-events-auto sticky top-[calc(100vh-5.5rem)] flex h-12 w-12 mb-16 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="Scroll to top"
+    title="Scroll to top">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+      <nav class="flex flex-row pb-4 text-base font-medium text-neutral-500 dark:text-neutral-400">
+        <ul class="flex flex-col list-none sm:flex-row">
+          
+            <li
+              class="flex mb-1 ltr:text-right rtl:text-left sm:mb-0 ltr:sm:mr-7 ltr:sm:last:mr-0 rtl:sm:ml-7 rtl:sm:last:ml-0">
+              <a
+                class="decoration-primary-500 hover:underline hover:decoration-2 hover:underline-offset-2 flex items-center"
+                href=""
+                title="">
+                
+                
+              </a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          &copy;
+          2025
+          Harikrishna S
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a>
+      </p>
+    
+
+  </div>
+  <script>
+    
+    mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+      margin: 24,
+      background: 'rgba(0,0,0,0.5)',
+      scrollOffset: 0,
+    })
+    
+  </script> 
+  
+  <script
+    type="text/javascript"
+    src="/js/process.min.ee03488f19c93c2efb199e2e3014ea5f3cb2ce7d45154adb3399a158cac27ca52831db249ede5bb602700ef87eb02434139de0858af1818ab0fb4182472204a4.js"
+    integrity="sha512-7gNIjxnJPC77GZ4uMBTqXzyyzn1FFUrbM5mhWMrCfKUoMdsknt5btgJwDvh&#43;sCQ0E53ghYrxgYqw&#43;0GCRyIEpA=="></script>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="http://localhost:1313/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          
+
+  <span class="relative block icon">
+    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+
+  </span>
+
+
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="Search"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="Close (Esc)">
+        
+
+  <span class="relative block icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+
+  </span>
+
+
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+  </body>
+  
+</html>

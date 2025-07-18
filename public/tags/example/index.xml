@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Example on Faron</title>
+    <link>http://localhost:1313/tags/example/</link>
+    <description>Recent content in Example on Faron</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>© 2025 Harikrishna S</copyright>
+    <lastBuildDate>Fri, 18 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/example/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>test-article</title>
+      <link>http://localhost:1313/thoughts/1752817320340-test-article/</link>
+      <pubDate>Fri, 18 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/thoughts/1752817320340-test-article/</guid>
+      <description></description>
+      
+    </item>
+    
+  </channel>
+</rss>

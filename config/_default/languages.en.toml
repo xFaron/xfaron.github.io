@@ -1,0 +1,19 @@
+disabled = false
+languageCode = "en"
+languageName = "English"
+weight = 1
+title = "Faron"
+
+[params]
+displayName = "EN"
+isoCode = "en"
+rtl = false
+dateFormat = "2 January 2006"
+
+  [params.author]
+  links = [ ]
+
+["params.author"]
+name = "Harikrishna S"
+headline = "Hey there. Welcome to my learning journey"
+bio = "A guy who likes to learn"
